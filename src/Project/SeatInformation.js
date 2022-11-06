@@ -1,15 +1,23 @@
 import React, { Component } from 'react'
-
-export default class SeatInformation extends Component {
+import { connect } from 'react-redux';
+class SeatInformation extends Component {
     renderGhe = (danhSachGhe) => {
         return danhSachGhe.map((ghe, index) => {
             let cssGheDaDat = "";
             let disabled = false
+            // Ghế đã đặt
             if (ghe.daDat) {
                 cssGheDaDat = "gheDuocChon";
                 disabled = true;
             }
-            return <button disabled={disabled} className={`ghe ${cssGheDaDat}`} key={index}>
+            // Ghế đang đặt
+            let cssGheDangDat = "";
+            let indexGheDangDat = this.props.danhSachGheDangDat.findIndex(gheDangDat => gheDangDat.soGhe === ghe.soGhe);
+            if (indexGheDangDat !== -1) {
+                cssGheDangDat = "gheDangChon"
+            }
+
+            return <button onClick={() => { this.props.datGhe(ghe) }} disabled={disabled} className={`ghe ${cssGheDaDat} ${cssGheDangDat}`} key={index}>
                 {ghe.soGhe}
             </button>
         })
@@ -41,3 +49,23 @@ export default class SeatInformation extends Component {
         )
     }
 }
+
+const mapStateToProps = state => {
+    return {
+        danhSachGheDangDat: state.ProjectReducer.danhSachGheDangDat
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        datGhe: (ghe) => {
+            dispatch({
+                type: "DAT_GHE",
+                ghe
+            })
+        }
+    }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(SeatInformation);
