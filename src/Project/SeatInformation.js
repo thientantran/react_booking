@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
+import { datGheAction } from '../Redux/Actions/ProjectActions';
 class SeatInformation extends Component {
     renderGhe = (danhSachGhe) => {
         return danhSachGhe.map((ghe, index) => {
@@ -59,10 +60,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch) => {
     return {
         datGhe: (ghe) => {
-            dispatch({
-                type: "DAT_GHE",
-                ghe
-            })
+            dispatch(datGheAction(ghe))
         }
     }
 }

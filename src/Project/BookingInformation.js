@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-
-export default class BookingInformation extends Component {
+import { connect } from 'react-redux';
+import { huyGheAction } from '../Redux/Actions/ProjectActions';
+class BookingInformation extends Component {
     render() {
         return (
             <div>
@@ -24,10 +25,26 @@ export default class BookingInformation extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            <th>Tổng tiền</th>
-                            <th></th>
-                            <th></th>
+                            {this.props.danhSachGheDangDat.map((gheDangDat, index) => {
+                                return <tr key={index}>
+                                    <th>{gheDangDat.soGhe}</th>
+                                    <th>{gheDangDat.gia.toLocaleString()}</th>
+                                    <th><button onClick={() => {
+                                        this.props.dispatch(huyGheAction(gheDangDat))
+                                    }}>Hủy</button></th>
+                                </tr>
+                            })}
                         </tbody>
+
+                        <tfoot>
+                            <tr>
+                                <th>Tổng Tiền</th>
+                                <th>{this.props.danhSachGheDangDat.reduce((tongTien, gheDangDat, index) => {
+                                    return tongTien += gheDangDat.gia
+                                }, 0).toLocaleString()}</th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -35,4 +52,10 @@ export default class BookingInformation extends Component {
     }
 }
 
+const mapStateToProps = state => {
+    return {
+        danhSachGheDangDat: state.ProjectReducer.danhSachGheDangDat
+    }
+}
 
+export default connect(mapStateToProps)(BookingInformation)
